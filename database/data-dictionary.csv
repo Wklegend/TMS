@@ -1,0 +1,358 @@
+﻿table,column,mysql_type,key,nullable,references,description
+departments,id,VARCHAR(64),PK,NO,,المعرّف
+departments,name,VARCHAR(190),UNIQUE,NO,,رمز القسم المستخدم في المهام والتقارير (مثل TD)
+departments,name_ar,VARCHAR(190),,YES,,اسم القسم بالعربية
+departments,name_en,VARCHAR(190),,YES,,اسم القسم بالإنجليزية
+departments,head_id,VARCHAR(64),FK,YES,people.id,رئيس القسم
+departments,status,VARCHAR(20),FK,YES,lk_dept_status.code,حالة القسم (فارغ = فعال)
+departments,icon,VARCHAR(40),,YES,,أيقونة القسم (فارغ = تلقائية من الاسم)
+departments,description,TEXT,,YES,,وصف القسم
+departments,source,VARCHAR(190),,YES,,مصدر السجل
+departments,created_at,DATETIME,,YES,,تاريخ الإنشاء (UTC)
+departments,updated_at,DATETIME,,YES,,تاريخ آخر تعديل (UTC)
+departments,extra_json,JSON,,YES,,حقول إضافية غير مُعرّفة في الأعمدة (للحفاظ على كل البيانات)
+people,id,VARCHAR(64),PK,NO,,المعرّف
+people,code,VARCHAR(20),INDEX,YES,,الرمز الظاهر (E-1)
+people,full_name,VARCHAR(190),,NO,,الاسم
+people,kind,VARCHAR(20),FK,YES,lk_person_kind.code,النوع
+people,role,VARCHAR(20),FK,YES,lk_role.code,الدور في الهيكل
+people,department_id,VARCHAR(64),FK,YES,departments.id,القسم
+people,reports_to_id,VARCHAR(64),FK,YES,people.id,يتبع لـ
+people,job_title,VARCHAR(190),,YES,,الوظيفة
+people,admin_title,VARCHAR(190),,YES,,وظيفة إدارية أخرى
+people,duty_status,VARCHAR(20),FK,YES,lk_duty_status.code,على رأس العمل أم لا
+people,duty_note,VARCHAR(300),,YES,,سبب عدم التواجد / حتى تاريخ
+people,cert_folder_url,VARCHAR(1000),,YES,,رابط مجلد الشهادات المشترك (Google Drive أو OneDrive)
+people,specialization,VARCHAR(190),,YES,,التخصص
+people,email,VARCHAR(190),,YES,,البريد الإلكتروني
+people,phone,VARCHAR(40),,YES,,الجوال
+people,account_id,VARCHAR(64),INDEX,YES,,معرّف حساب الدخول المرتبط
+people,perms_json,JSON,,YES,,ما يُسمح للموظف بتحديثه
+people,notes,TEXT,,YES,,ملاحظات
+people,source,VARCHAR(190),,YES,,مصدر السجل
+people,created_at,DATETIME,,YES,,تاريخ الإنشاء (UTC)
+people,updated_at,DATETIME,,YES,,تاريخ آخر تعديل (UTC)
+people,extra_json,JSON,,YES,,حقول إضافية غير مُعرّفة في الأعمدة (للحفاظ على كل البيانات)
+person_subjects,person_id,VARCHAR(64),FK,NO,people.id,العنصر الأب
+person_subjects,seq,SMALLINT,,YES,,الترتيب
+person_subjects,subject,VARCHAR(190),,NO,,مادة يستطيع تدريبها
+person_certificates,person_id,VARCHAR(64),FK,NO,people.id,العنصر الأب
+person_certificates,seq,SMALLINT,,YES,,الترتيب
+person_certificates,id,VARCHAR(64),PK,NO,,المعرّف
+person_certificates,name,VARCHAR(300),,YES,,اسم الشهادة
+person_certificates,issuer,VARCHAR(190),,YES,,الجهة المانحة
+person_certificates,issued_on,DATE,,YES,,تاريخ الحصول
+person_certificates,expires_on,DATE,,YES,,تاريخ الانتهاء
+person_certificates,url,VARCHAR(1000),,YES,,رابط الشهادة (Google Drive أو OneDrive)
+projects,id,VARCHAR(64),PK,NO,,المعرّف
+projects,code,VARCHAR(20),INDEX,YES,,الرمز (P-1)
+projects,name,VARCHAR(300),,NO,,اسم المشروع
+projects,goal,TEXT,,YES,,الهدف
+projects,scope,TEXT,,YES,,النطاق
+projects,status,VARCHAR(20),FK,YES,lk_project_status.code,الحالة
+projects,owner_id,VARCHAR(64),FK,YES,people.id,المسؤول
+projects,department_id,VARCHAR(64),FK,YES,departments.id,القسم
+projects,start_date,DATE,,YES,,تاريخ البدء
+projects,due_date,DATE,INDEX,YES,,موعد التسليم
+projects,manual_progress,TINYINT,,YES,,نسبة إنجاز يدوية
+projects,from_idea_id,VARCHAR(64),FK,YES,ideas.id,الفكرة الأصلية
+projects,notes,TEXT,,YES,,ملاحظات
+projects,custom_json,JSON,,YES,,الحقول المخصصة
+projects,created_at,DATETIME,,YES,,تاريخ الإنشاء (UTC)
+projects,updated_at,DATETIME,,YES,,تاريخ آخر تعديل (UTC)
+projects,extra_json,JSON,,YES,,حقول إضافية غير مُعرّفة في الأعمدة (للحفاظ على كل البيانات)
+project_phases,project_id,VARCHAR(64),FK,NO,projects.id,العنصر الأب
+project_phases,seq,SMALLINT,,YES,,الترتيب
+project_phases,id,VARCHAR(64),PK,NO,,المعرّف
+project_phases,name,VARCHAR(300),,YES,,المرحلة
+project_phases,due_date,DATE,,YES,,الموعد
+project_phases,is_done,BOOLEAN,,YES,,منجزة
+project_deliverables,project_id,VARCHAR(64),FK,NO,projects.id,العنصر الأب
+project_deliverables,seq,SMALLINT,,YES,,الترتيب
+project_deliverables,id,VARCHAR(64),PK,NO,,المعرّف
+project_deliverables,name,VARCHAR(300),,YES,,المخرج
+project_deliverables,is_done,BOOLEAN,,YES,,سُلّم
+project_kpis,project_id,VARCHAR(64),FK,NO,projects.id,العنصر الأب
+project_kpis,seq,SMALLINT,,YES,,الترتيب
+project_kpis,id,VARCHAR(64),PK,NO,,المعرّف
+project_kpis,name,VARCHAR(300),,YES,,المؤشر
+project_kpis,target,VARCHAR(120),,YES,,المستهدف
+project_kpis,actual,VARCHAR(120),,YES,,المتحقق
+courses,id,VARCHAR(64),PK,NO,,المعرّف
+courses,code,VARCHAR(20),INDEX,YES,,الرمز (C-1)
+courses,title,VARCHAR(300),,NO,,عنوان الدورة
+courses,program,VARCHAR(190),,YES,,البرنامج التدريبي
+courses,goals,TEXT,,YES,,الأهداف
+courses,audience,VARCHAR(300),,YES,,الفئة المستهدفة
+courses,trainer_id,VARCHAR(64),FK,YES,people.id,المدرب
+courses,department_id,VARCHAR(64),FK,YES,departments.id,القسم المنظم
+courses,status,VARCHAR(20),FK,YES,lk_course_status.code,الحالة
+courses,start_date,DATE,INDEX,YES,,تاريخ البدء
+courses,end_date,DATE,,YES,,تاريخ الانتهاء
+courses,start_time,TIME,,YES,,الوقت
+courses,seats,SMALLINT,,YES,,عدد المقاعد
+courses,location,VARCHAR(300),,YES,,المكان
+courses,meeting_url,VARCHAR(1000),,YES,,رابط الحضور عن بُعد
+courses,notes,TEXT,,YES,,ملاحظات
+courses,created_at,DATETIME,,YES,,تاريخ الإنشاء (UTC)
+courses,updated_at,DATETIME,,YES,,تاريخ آخر تعديل (UTC)
+courses,extra_json,JSON,,YES,,حقول إضافية غير مُعرّفة في الأعمدة (للحفاظ على كل البيانات)
+course_prep_items,course_id,VARCHAR(64),FK,NO,courses.id,العنصر الأب
+course_prep_items,seq,SMALLINT,,YES,,الترتيب
+course_prep_items,id,VARCHAR(64),PK,NO,,المعرّف
+course_prep_items,item_key,VARCHAR(40),,YES,,نوع البند
+course_prep_items,label,VARCHAR(300),,YES,,البند
+course_prep_items,due_date,DATE,,YES,,الموعد
+course_prep_items,is_done,BOOLEAN,,YES,,منجز
+course_prep_items,done_at,DATETIME,,YES,,تاريخ الإنجاز
+course_prep_items,is_manual,BOOLEAN,,YES,,موعد معدل يدويًا
+course_enrollments,course_id,VARCHAR(64),FK,NO,courses.id,العنصر الأب
+course_enrollments,seq,SMALLINT,,YES,,الترتيب
+course_enrollments,person_id,VARCHAR(64),FK,YES,people.id,المتدرب
+course_enrollments,is_registered,BOOLEAN,,YES,,مسجل
+course_enrollments,attended,BOOLEAN,,YES,,حضر
+course_enrollments,completed,BOOLEAN,,YES,,أكمل
+course_enrollments,rating,TINYINT,,YES,,التقييم 1-5
+course_enrollments,note,TEXT,,YES,,ملاحظة
+tasks,id,VARCHAR(64),PK,NO,,المعرّف
+tasks,code,VARCHAR(20),INDEX,YES,,الرمز (T-1)
+tasks,title,VARCHAR(300),,NO,,عنوان المهمة
+tasks,description,TEXT,,YES,,الوصف
+tasks,status,VARCHAR(20),FK,YES,lk_task_status.code,الحالة («متأخرة» تُحسب ولا تُخزَّن)
+tasks,priority,VARCHAR(4),FK,YES,lk_priority.code,الأولوية
+tasks,assignee_id,VARCHAR(64),FK,YES,people.id,المسؤول
+tasks,department_id,VARCHAR(64),FK,YES,departments.id,القسم
+tasks,start_date,DATE,,YES,,تاريخ البدء
+tasks,due_date,DATE,INDEX,YES,,الموعد النهائي
+tasks,due_time,TIME,,YES,,وقت الموعد
+tasks,progress,TINYINT,,YES,,نسبة الإنجاز %
+tasks,blockers,TEXT,,YES,,العوائق
+tasks,next_step,TEXT,,YES,,الخطوة التالية
+tasks,project_id,VARCHAR(64),FK,YES,projects.id,المشروع
+tasks,course_id,VARCHAR(64),FK,YES,courses.id,الدورة
+tasks,idea_id,VARCHAR(64),FK,YES,ideas.id,الفكرة
+tasks,parent_task_id,VARCHAR(64),FK,YES,tasks.id,المهمة الأم
+tasks,visibility,VARCHAR(20),FK,YES,lk_visibility.code,من يرى المهمة
+tasks,reminder_mode,VARCHAR(20),,YES,,وضع التذكير (default/custom/off)
+tasks,completed_at,DATETIME,,YES,,تاريخ الإكمال
+tasks,last_update_at,DATETIME,,YES,,آخر تحديث للعمل
+tasks,created_by_id,VARCHAR(64),FK,YES,people.id,أنشأها
+tasks,source,VARCHAR(300),,YES,,المصدر
+tasks,import_batch_id,VARCHAR(64),,YES,,دفعة الاستيراد
+tasks,excel_no,VARCHAR(20),,YES,,رقم المهمة في Excel
+tasks,year,VARCHAR(10),,YES,,السنة
+tasks,month,VARCHAR(20),,YES,,الشهر
+tasks,custom_json,JSON,,YES,,الحقول المخصصة
+tasks,raw_import_json,JSON,,YES,,صف Excel الأصلي كما استُورد
+tasks,created_at,DATETIME,,YES,,تاريخ الإنشاء (UTC)
+tasks,updated_at,DATETIME,,YES,,تاريخ آخر تعديل (UTC)
+tasks,extra_json,JSON,,YES,,حقول إضافية غير مُعرّفة في الأعمدة (للحفاظ على كل البيانات)
+task_dependencies,task_id,VARCHAR(64),FK,NO,tasks.id,العنصر الأب
+task_dependencies,seq,SMALLINT,,YES,,الترتيب
+task_dependencies,depends_on_task_id,VARCHAR(64),FK,YES,tasks.id,المهمة التي تعتمد عليها
+task_reminders,task_id,VARCHAR(64),FK,NO,tasks.id,العنصر الأب
+task_reminders,seq,SMALLINT,,YES,,الترتيب
+task_reminders,id,VARCHAR(64),PK,NO,,المعرّف
+task_reminders,when_type,VARCHAR(10),FK,YES,lk_reminder_when.code,التوقيت
+task_reminders,offset_value,SMALLINT,,YES,,العدد
+task_reminders,offset_unit,VARCHAR(2),FK,YES,lk_reminder_unit.code,الوحدة
+task_reminders,channels,VARCHAR(100),,YES,,القنوات (مفصولة بفاصلة)
+task_reminders,recipient,VARCHAR(20),,YES,,المستلم
+assignments,id,VARCHAR(64),PK,NO,,المعرّف
+assignments,code,VARCHAR(20),INDEX,YES,,الرمز (A-1)
+assignments,title,VARCHAR(300),,NO,,عنوان التكليف
+assignments,expected_outcome,TEXT,,YES,,النتيجة المتوقعة
+assignments,due_date,DATE,INDEX,YES,,الموعد النهائي
+assignments,priority,VARCHAR(4),FK,YES,lk_priority.code,الأولوية
+assignments,status,VARCHAR(20),FK,YES,lk_task_status.code,الحالة
+assignments,needs_approval,BOOLEAN,,YES,,يتطلب موافقة المدير
+assignments,project_id,VARCHAR(64),FK,YES,projects.id,المشروع
+assignments,course_id,VARCHAR(64),FK,YES,courses.id,الدورة
+assignments,note,TEXT,,YES,,ملاحظة للموظف
+assignments,completed_at,DATETIME,,YES,,تاريخ الإغلاق
+assignments,created_at,DATETIME,,YES,,تاريخ الإنشاء (UTC)
+assignments,updated_at,DATETIME,,YES,,تاريخ آخر تعديل (UTC)
+assignments,extra_json,JSON,,YES,,حقول إضافية غير مُعرّفة في الأعمدة (للحفاظ على كل البيانات)
+assignment_assignees,assignment_id,VARCHAR(64),FK,NO,assignments.id,العنصر الأب
+assignment_assignees,seq,SMALLINT,,YES,,الترتيب
+assignment_assignees,person_id,VARCHAR(64),FK,YES,people.id,الموظف المكلف
+assignment_assignees,seen_at,DATETIME,,YES,,آخر اطلاع للمدير
+assignment_assignees,approval_status,VARCHAR(20),,YES,,اعتماد المدير (approved/returned)
+assignment_assignees,approval_at,DATETIME,,YES,,تاريخ الاعتماد
+assignment_assignees,reply_text,TEXT,,YES,,رد المدير
+assignment_assignees,reply_at,DATETIME,,YES,,تاريخ الرد
+assignment_links,assignment_id,VARCHAR(64),FK,NO,assignments.id,العنصر الأب
+assignment_links,seq,SMALLINT,,YES,,الترتيب
+assignment_links,id,VARCHAR(64),PK,NO,,المعرّف
+assignment_links,title,VARCHAR(300),,YES,,عنوان المرجع
+assignment_links,url,VARCHAR(1000),,YES,,الرابط
+ideas,id,VARCHAR(64),PK,NO,,المعرّف
+ideas,code,VARCHAR(20),INDEX,YES,,الرمز (I-1)
+ideas,title,VARCHAR(300),,NO,,عنوان الفكرة
+ideas,problem,TEXT,,YES,,المشكلة
+ideas,beneficiaries,TEXT,,YES,,الفئة المستفيدة
+ideas,solution,TEXT,,YES,,الحل المقترح
+ideas,value_proposition,TEXT,,YES,,القيمة
+ideas,assumptions,TEXT,,YES,,الافتراضات
+ideas,risks,TEXT,,YES,,المخاطر
+ideas,next_step,TEXT,,YES,,الخطوة التالية
+ideas,impact,TINYINT,,YES,,الأثر 1-5
+ideas,effort,TINYINT,,YES,,الجهد 1-5
+ideas,cost,TINYINT,,YES,,التكلفة 1-5
+ideas,ease,TINYINT,,YES,,سهولة التنفيذ 1-5
+ideas,stage,VARCHAR(20),FK,YES,lk_idea_stage.code,المرحلة
+ideas,project_id,VARCHAR(64),FK,YES,projects.id,المشروع التجريبي
+ideas,source,VARCHAR(40),,YES,,المصدر (ai = مقترحة آليًا)
+ideas,notes,TEXT,,YES,,ملاحظات
+ideas,created_at,DATETIME,,YES,,تاريخ الإنشاء (UTC)
+ideas,updated_at,DATETIME,,YES,,تاريخ آخر تعديل (UTC)
+ideas,extra_json,JSON,,YES,,حقول إضافية غير مُعرّفة في الأعمدة (للحفاظ على كل البيانات)
+idea_links,idea_id,VARCHAR(64),FK,NO,ideas.id,العنصر الأب
+idea_links,seq,SMALLINT,,YES,,الترتيب
+idea_links,id,VARCHAR(64),PK,NO,,المعرّف
+idea_links,title,VARCHAR(300),,YES,,عنوان المرجع
+idea_links,url,VARCHAR(1000),,YES,,الرابط
+strategic_themes,id,VARCHAR(64),PK,NO,,المعرّف
+strategic_themes,code,VARCHAR(20),INDEX,YES,,الرمز (TH-1)
+strategic_themes,name,VARCHAR(300),,NO,,اسم المحور
+strategic_themes,description,TEXT,,YES,,الوصف
+strategic_themes,owner_id,VARCHAR(64),FK,YES,people.id,مسؤول المحور
+strategic_themes,sort_order,SMALLINT,,YES,,الترتيب
+strategic_themes,created_at,DATETIME,,YES,,تاريخ الإنشاء (UTC)
+strategic_themes,updated_at,DATETIME,,YES,,تاريخ آخر تعديل (UTC)
+strategic_themes,extra_json,JSON,,YES,,حقول إضافية غير مُعرّفة في الأعمدة (للحفاظ على كل البيانات)
+strategic_goals,id,VARCHAR(64),PK,NO,,المعرّف
+strategic_goals,code,VARCHAR(20),INDEX,YES,,الرمز (G-1)
+strategic_goals,theme_id,VARCHAR(64),FK,NO,strategic_themes.id,المحور
+strategic_goals,name,VARCHAR(300),,NO,,الهدف
+strategic_goals,description,TEXT,,YES,,الوصف
+strategic_goals,indicator,VARCHAR(300),,YES,,مؤشر قياس الهدف
+strategic_goals,target,VARCHAR(120),,YES,,المستهدف
+strategic_goals,sort_order,SMALLINT,,YES,,الترتيب
+strategic_goals,created_at,DATETIME,,YES,,تاريخ الإنشاء (UTC)
+strategic_goals,updated_at,DATETIME,,YES,,تاريخ آخر تعديل (UTC)
+strategic_goals,extra_json,JSON,,YES,,حقول إضافية غير مُعرّفة في الأعمدة (للحفاظ على كل البيانات)
+strategic_initiatives,id,VARCHAR(64),PK,NO,,المعرّف
+strategic_initiatives,code,VARCHAR(20),INDEX,YES,,الرمز (IN-1)
+strategic_initiatives,goal_id,VARCHAR(64),FK,NO,strategic_goals.id,الهدف
+strategic_initiatives,name,VARCHAR(300),,NO,,المبادرة
+strategic_initiatives,description,TEXT,,YES,,الوصف
+strategic_initiatives,owner_id,VARCHAR(64),FK,YES,people.id,المسؤول
+strategic_initiatives,department_id,VARCHAR(64),FK,YES,departments.id,القسم
+strategic_initiatives,status,VARCHAR(20),FK,YES,lk_task_status.code,الحالة
+strategic_initiatives,start_date,DATE,,YES,,البداية
+strategic_initiatives,due_date,DATE,,YES,,النهاية المخططة
+strategic_initiatives,progress,TINYINT,,YES,,نسبة الإنجاز 0-100
+strategic_initiatives,progress_note,TEXT,,YES,,ملاحظة الإنجاز
+strategic_initiatives,project_id,VARCHAR(64),FK,YES,projects.id,المشروع المرتبط
+strategic_initiatives,created_at,DATETIME,,YES,,تاريخ الإنشاء (UTC)
+strategic_initiatives,updated_at,DATETIME,,YES,,تاريخ آخر تعديل (UTC)
+strategic_initiatives,extra_json,JSON,,YES,,حقول إضافية غير مُعرّفة في الأعمدة (للحفاظ على كل البيانات)
+initiative_evidence,initiative_id,VARCHAR(64),FK,NO,strategic_initiatives.id,العنصر الأب
+initiative_evidence,seq,SMALLINT,,YES,,الترتيب
+initiative_evidence,id,VARCHAR(64),PK,NO,,المعرّف
+initiative_evidence,title,VARCHAR(300),,YES,,الدليل
+initiative_evidence,url,VARCHAR(1000),,YES,,الرابط
+initiative_evidence,note,TEXT,,YES,,ملاحظة
+initiative_evidence,added_on,DATE,,YES,,التاريخ
+files,id,VARCHAR(64),PK,NO,,المعرّف
+files,code,VARCHAR(20),INDEX,YES,,الرمز (F-1)
+files,name,VARCHAR(300),,NO,,اسم الملف
+files,mime_type,VARCHAR(120),,YES,,النوع
+files,size_bytes,BIGINT,,YES,,الحجم بالبايت
+files,storage,VARCHAR(20),,YES,,مكان الحفظ (drive/drive-link/link)
+files,drive_file_id,VARCHAR(120),,YES,,معرّف الملف في Drive
+files,url,VARCHAR(1000),,YES,,الرابط
+files,folder_path,VARCHAR(500),,YES,,مسار المجلد
+files,entity_type,VARCHAR(40),INDEX,YES,,نوع العنصر المرتبط
+files,entity_id,VARCHAR(64),INDEX,YES,,العنصر المرتبط
+files,visibility,VARCHAR(20),,YES,,مستوى الوصول
+files,visibility_label,VARCHAR(120),,YES,,وصف مستوى الوصول
+files,checked_at,DATETIME,,YES,,آخر تحقق من الصلاحيات
+files,uploaded_at,DATETIME,,YES,,تاريخ الرفع
+files,created_at,DATETIME,,YES,,تاريخ الإنشاء (UTC)
+files,updated_at,DATETIME,,YES,,تاريخ آخر تعديل (UTC)
+files,extra_json,JSON,,YES,,حقول إضافية غير مُعرّفة في الأعمدة (للحفاظ على كل البيانات)
+links,id,VARCHAR(64),PK,NO,,المعرّف
+links,code,VARCHAR(20),INDEX,YES,,الرمز (L-1)
+links,title,VARCHAR(300),,NO,,العنوان
+links,url,VARCHAR(1000),,NO,,الرابط
+links,description,TEXT,,YES,,الوصف
+links,category,VARCHAR(120),,YES,,التصنيف
+links,entity_type,VARCHAR(40),,YES,,نوع العنصر المرتبط
+links,entity_id,VARCHAR(64),,YES,,العنصر المرتبط
+links,created_at,DATETIME,,YES,,تاريخ الإنشاء (UTC)
+links,updated_at,DATETIME,,YES,,تاريخ آخر تعديل (UTC)
+links,extra_json,JSON,,YES,,حقول إضافية غير مُعرّفة في الأعمدة (للحفاظ على كل البيانات)
+summaries,id,VARCHAR(64),PK,NO,,المعرّف
+summaries,code,VARCHAR(20),,YES,,الرمز (S-1)
+summaries,title,VARCHAR(300),,NO,,العنوان
+summaries,period,VARCHAR(20),,YES,,الفترة (week/month/custom/ai)
+summaries,range_start,DATE,,YES,,بداية الفترة
+summaries,range_end,DATE,,YES,,نهاية الفترة
+summaries,kind,VARCHAR(10),,YES,,data = من البيانات، ai = مسودة ذكاء اصطناعي
+summaries,body,MEDIUMTEXT,,YES,,النص
+summaries,created_at,DATETIME,,YES,,تاريخ الإنشاء (UTC)
+summaries,updated_at,DATETIME,,YES,,تاريخ آخر تعديل (UTC)
+summaries,extra_json,JSON,,YES,,حقول إضافية غير مُعرّفة في الأعمدة (للحفاظ على كل البيانات)
+activity_log,id,VARCHAR(80),PK,NO,,المعرّف
+activity_log,entity_type,VARCHAR(40),INDEX,NO,,نوع العنصر
+activity_log,entity_id,VARCHAR(64),INDEX,NO,,العنصر
+activity_log,seq,INT,,YES,,الترتيب
+activity_log,logged_at,DATETIME,,YES,,الوقت
+activity_log,message,TEXT,,YES,,التغيير
+app_settings,setting_key,VARCHAR(64),PK,NO,,المفتاح (settings/notif/backup/imports/strategy/platform = بيانات المنصة: المعهد والمدير والتواصل والترخيص)
+app_settings,value_json,JSON,,NO,,القيمة
+app_settings,updated_at,DATETIME,,YES,,آخر تعديل
+lk_task_status,code,VARCHAR(20),PK,NO,,الرمز المخزَّن في الجداول
+lk_task_status,name_ar,VARCHAR(120),,NO,,الاسم بالعربية
+lk_task_status,name_en,VARCHAR(120),,NO,,الاسم بالإنجليزية
+lk_task_status,sort_order,SMALLINT,,YES,,الترتيب
+lk_priority,code,VARCHAR(20),PK,NO,,الرمز المخزَّن في الجداول
+lk_priority,name_ar,VARCHAR(120),,NO,,الاسم بالعربية
+lk_priority,name_en,VARCHAR(120),,NO,,الاسم بالإنجليزية
+lk_priority,sort_order,SMALLINT,,YES,,الترتيب
+lk_project_status,code,VARCHAR(20),PK,NO,,الرمز المخزَّن في الجداول
+lk_project_status,name_ar,VARCHAR(120),,NO,,الاسم بالعربية
+lk_project_status,name_en,VARCHAR(120),,NO,,الاسم بالإنجليزية
+lk_project_status,sort_order,SMALLINT,,YES,,الترتيب
+lk_course_status,code,VARCHAR(20),PK,NO,,الرمز المخزَّن في الجداول
+lk_course_status,name_ar,VARCHAR(120),,NO,,الاسم بالعربية
+lk_course_status,name_en,VARCHAR(120),,NO,,الاسم بالإنجليزية
+lk_course_status,sort_order,SMALLINT,,YES,,الترتيب
+lk_idea_stage,code,VARCHAR(20),PK,NO,,الرمز المخزَّن في الجداول
+lk_idea_stage,name_ar,VARCHAR(120),,NO,,الاسم بالعربية
+lk_idea_stage,name_en,VARCHAR(120),,NO,,الاسم بالإنجليزية
+lk_idea_stage,sort_order,SMALLINT,,YES,,الترتيب
+lk_person_kind,code,VARCHAR(20),PK,NO,,الرمز المخزَّن في الجداول
+lk_person_kind,name_ar,VARCHAR(120),,NO,,الاسم بالعربية
+lk_person_kind,name_en,VARCHAR(120),,NO,,الاسم بالإنجليزية
+lk_person_kind,sort_order,SMALLINT,,YES,,الترتيب
+lk_dept_status,code,VARCHAR(20),PK,NO,,الرمز المخزَّن في الجداول
+lk_dept_status,name_ar,VARCHAR(120),,NO,,الاسم بالعربية
+lk_dept_status,name_en,VARCHAR(120),,NO,,الاسم بالإنجليزية
+lk_dept_status,sort_order,SMALLINT,,YES,,الترتيب
+lk_duty_status,code,VARCHAR(20),PK,NO,,الرمز المخزَّن في الجداول
+lk_duty_status,name_ar,VARCHAR(120),,NO,,الاسم بالعربية
+lk_duty_status,name_en,VARCHAR(120),,NO,,الاسم بالإنجليزية
+lk_duty_status,sort_order,SMALLINT,,YES,,الترتيب
+lk_role,code,VARCHAR(20),PK,NO,,الرمز المخزَّن في الجداول
+lk_role,name_ar,VARCHAR(120),,NO,,الاسم بالعربية
+lk_role,name_en,VARCHAR(120),,NO,,الاسم بالإنجليزية
+lk_role,sort_order,SMALLINT,,YES,,الترتيب
+lk_visibility,code,VARCHAR(20),PK,NO,,الرمز المخزَّن في الجداول
+lk_visibility,name_ar,VARCHAR(120),,NO,,الاسم بالعربية
+lk_visibility,name_en,VARCHAR(120),,NO,,الاسم بالإنجليزية
+lk_visibility,sort_order,SMALLINT,,YES,,الترتيب
+lk_reminder_when,code,VARCHAR(20),PK,NO,,الرمز المخزَّن في الجداول
+lk_reminder_when,name_ar,VARCHAR(120),,NO,,الاسم بالعربية
+lk_reminder_when,name_en,VARCHAR(120),,NO,,الاسم بالإنجليزية
+lk_reminder_when,sort_order,SMALLINT,,YES,,الترتيب
+lk_reminder_unit,code,VARCHAR(20),PK,NO,,الرمز المخزَّن في الجداول
+lk_reminder_unit,name_ar,VARCHAR(120),,NO,,الاسم بالعربية
+lk_reminder_unit,name_en,VARCHAR(120),,NO,,الاسم بالإنجليزية
+lk_reminder_unit,sort_order,SMALLINT,,YES,,الترتيب
+lk_channel,code,VARCHAR(20),PK,NO,,الرمز المخزَّن في الجداول
+lk_channel,name_ar,VARCHAR(120),,NO,,الاسم بالعربية
+lk_channel,name_en,VARCHAR(120),,NO,,الاسم بالإنجليزية
+lk_channel,sort_order,SMALLINT,,YES,,الترتيب
